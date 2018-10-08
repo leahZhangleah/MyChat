@@ -26,7 +26,8 @@
         <activity
             android:name=".login.LoginActivity2"
             android:label="@string/title_activity_login2" />
-        <activity android:name=".contacts.ContactsActivity"></activity>
+        <activity android:name=".contacts.ContactsActivity" />
+        <activity android:name=".contacts.NewContactActivity"></activity>
     </application>
 
 </manifest>
