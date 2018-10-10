@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.mychat.R;
+import com.example.android.mychat.newContacts.NewContactActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -44,11 +45,11 @@ public class ContactsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactViewModel.addNewContact("c@gmail.com","asdbdm");
-                contactViewModel.addNewContact("d@gmail.com","weitnd");
+                //contactViewModel.addNewContact("c@gmail.com","asdbdm");
+                //contactViewModel.addNewContact("d@gmail.com","weitnd");
                 //contactViewModel.writeToDatabase("c@gmail.com","Do you wanna hang ou?","07/28",null);
                 //contactViewModel.writeToDatabase("d@gmail.com","Sure,what's your plan?","07/28",null);
-                //addUser();
+                addUser();
             }
         });
     }

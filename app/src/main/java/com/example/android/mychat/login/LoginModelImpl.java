@@ -3,18 +3,25 @@ package com.example.android.mychat.login;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.android.mychat.FirebaseHelper;
+import com.example.android.mychat.User;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginModelImpl implements LoginModel {
     FirebaseAuth firebaseAuth;
+    FirebaseHelper firebaseHelper;
+    private static final String TAG = "LoginModelImpl";
 
     public LoginModelImpl() {
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseHelper = new FirebaseHelper();
     }
 
     @Override
@@ -50,7 +57,26 @@ public class LoginModelImpl implements LoginModel {
                                 Log.d("LoginModelImpl","sign up user with email:success");
                                 //todo
                                 String currentUserUid = firebaseAuth.getCurrentUser().getUid();
-                                FirebaseDatabase.getInstance().getReference("users").child(currentUserUid);
+                                User user = new User(email,email.split("@")[0],currentUserUid);
+                                firebaseHelper.getUserDbReference().child(currentUserUid).setValue(user)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG,"The new user has been added into the database");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG,"adding user into database failed with error: "+e.getMessage());
+                                            }
+                                        })
+                                        .addOnCanceledListener(new OnCanceledListener() {
+                                            @Override
+                                            public void onCanceled() {
+                                                Log.d(TAG,"adding user into database is cancelled");
+                                            }
+                                        });
                                 listener.onAuthenticationSuccess(firebaseAuth.getCurrentUser());
                             }else{
                                 Log.d("LoginModelImpl","sign in user with email:failure",task.getException());

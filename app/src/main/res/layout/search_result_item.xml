@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="searchResult"
+            type="com.example.android.mychat.newContacts.SearchItemViewModel">
+        </variable>
+    </data>
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search_result_layout">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/search_result_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="8dp"
+        android:padding="2dp"
+        android:src="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:text="@{searchResult.emailBrev}"
+        android:id="@+id/search_result_title_brev"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/search_result_image"
+        app:layout_constraintEnd_toEndOf="@+id/search_result_image"
+        app:layout_constraintStart_toStartOf="@+id/search_result_image"
+        app:layout_constraintTop_toTopOf="@+id/search_result_image" />
+
+    <TextView
+        android:text="@{searchResult.email}"
+        android:id="@+id/search_result_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/search_result_image"
+        app:layout_constraintStart_toEndOf="@+id/search_result_image"
+        app:layout_constraintTop_toTopOf="@+id/search_result_image"
+        tools:text="email@gmail.com" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/search_result_image"
+        app:layout_constraintStart_toStartOf="@+id/search_result_email"
+        />
+</android.support.constraint.ConstraintLayout>
+</layout>

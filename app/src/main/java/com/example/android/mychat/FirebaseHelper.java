@@ -18,15 +18,15 @@ public class FirebaseHelper {
     }
 
     public DatabaseReference getUserDbReference(){
-        return firebasedatabse.getReference(USER_PATH);
+        return firebasedatabse.getReference().child(USER_PATH);
     }
 
     public DatabaseReference getContactsDbReference(){
-        return firebasedatabse.getReference(getCurrentUserUid()).child(CONTACTS_PATH);
+        return firebasedatabse.getReference().child(getCurrentUserUid()).child(CONTACTS_PATH);
     }
 
     public DatabaseReference getChatsDbReference(){
-        return firebasedatabse.getReference(getCurrentUserUid()).child(CHATS_PATH);
+        return firebasedatabse.getReference().child(getCurrentUserUid()).child(CHATS_PATH);
     }
 
     public String getCurrentUserUid(){
