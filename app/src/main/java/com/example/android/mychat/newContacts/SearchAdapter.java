@@ -10,13 +10,14 @@ import com.example.android.mychat.R;
 import com.example.android.mychat.User;
 import com.example.android.mychat.databinding.SearchResultItemBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
     List<User> users;
 
-    public SearchAdapter(List<User> users) {
-        this.users = users;
+    public SearchAdapter(){
+        users = new ArrayList<>();
     }
 
     @NonNull
@@ -32,6 +33,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
         holder.searchResultItemBinding.setSearchResult(new SearchItemViewModel(users.get(position)));
+    }
+
+    public void switchUsers(List<User> newUsers){
+        if(users!=newUsers){
+            users.clear();
+            users.addAll(newUsers);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

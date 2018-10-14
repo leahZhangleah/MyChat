@@ -1,15 +1,16 @@
 package com.example.android.mychat;
 
 public class User {
-    String email,username,uid;
+    String email,uid;
+    boolean isOnline;
 
     public User() {
     }
 
 
-    public User(String email, String username, String uid) {
+    public User(String email, boolean isOnline, String uid) {
         this.email = email;
-        this.username = username;
+        this.isOnline = isOnline;
         this.uid = uid;
     }
 
@@ -21,7 +22,8 @@ public class User {
         return email;
     }
 
-    public String getUsername() {
-        return username;
+
+    public boolean isOnline() {
+        return isOnline;
     }
 }

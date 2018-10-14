@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.mychat.FirebaseHelper;
+import com.example.android.mychat.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,14 +24,15 @@ public class Repository {
 
     public Repository() {
         firebaseHelper = new FirebaseHelper();
-        mDatabase = firebaseHelper.getContactsDbReference();
+        mDatabase = firebaseHelper.getOneUserContactsDbReference(firebaseHelper.getCurrentUserUid());
     }
 
+    /*
     public void addNewContact(String email, String uid){
         Contact contact = new Contact(email,uid);
         mDatabase.child(uid).setValue(contact);
 
-    }
+    }*/
 
     public MutableLiveData<List<Contact>> getContactListsLiveData() {
         contacts = new ArrayList<>();
@@ -69,5 +71,13 @@ public class Repository {
 
     public void removeEventListener(){
         mDatabase.removeEventListener(contactListener);
+    }
+
+    public void signOut(){
+        String uid = firebaseHelper.getCurrentUserUid();
+        String email = firebaseHelper.getCurrentUserEmail();
+        User user = new User(email,false,uid);
+        firebaseHelper.getUserDbReference().child(uid).setValue(user);
+        firebaseHelper.getFirebaseAuth().signOut();
     }
 }

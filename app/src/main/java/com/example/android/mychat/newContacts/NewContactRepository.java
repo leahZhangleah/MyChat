@@ -11,14 +11,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-
 public class NewContactRepository {
-
+    private static final String TAG = "NewContactRepository";
     FirebaseHelper firebaseHelper;
-    Observable<List<User>> usersObservable;
     List<User> users;
 
 
@@ -33,25 +28,18 @@ public class NewContactRepository {
     exact search: orderByChild("email").equalTo(searchTerm)
     Here is exact search: start with searchTerm
      */
-    public Observable<List<User>> searchNewContact(String searchTerm){
+    //
+    public List<User> searchNewContact(String searchTerm){
         firebaseHelper.getUserDbReference().orderByChild("email")
                 .startAt(searchTerm).endAt(searchTerm+"\uf8ff")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        users.clear();
                         for(DataSnapshot userSnapshot: dataSnapshot.getChildren()){
                             User user = userSnapshot.getValue(User.class);
                             users.add(user);
                         }
-                        usersObservable = Observable.create(new ObservableOnSubscribe<List<User>>() {
-                            @Override
-                            public void subscribe(ObservableEmitter<List<User>> emitter) throws Exception {
-                                if(!emitter.isDisposed()){
-                                    emitter.onNext(users);
-                                }
-                            }
-                        });
-
                     }
 
                     @Override
@@ -59,6 +47,7 @@ public class NewContactRepository {
 
                     }
                 });
-        return usersObservable;
+        return users;
     }
+
 }

@@ -30,10 +30,18 @@ public class ContactViewModel extends ViewModel {
         });
     }
 
+/*
     public void addNewContact(String email,String uid){
         repository.addNewContact(email,uid);
+    }*/
+
+    public void signOut(){
+        repository.signOut();
     }
 
-
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        repository.removeEventListener();
+    }
 }

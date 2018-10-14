@@ -2,13 +2,19 @@ package com.example.android.mychat.contacts;
 
 public class Contact {
     public String email,uid;
+    boolean isOnline;
 
     public Contact() {
     }
 
-    public Contact(String email,String uid) {
+    public Contact(String email,boolean isOnline, String uid) {
         this.email = email;
         this.uid = uid;
+        this.isOnline = isOnline;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
     }
 
     public String getEmail() {

@@ -13,16 +13,16 @@ public class FirebaseHelper {
     public static final String CHATS_PATH = "chats";
 
     public FirebaseHelper() {
-        firebasedatabse = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        firebasedatabse = FirebaseDatabase.getInstance();
     }
 
     public DatabaseReference getUserDbReference(){
-        return firebasedatabse.getReference().child(USER_PATH);
+        return firebasedatabse.getReference(USER_PATH);
     }
 
-    public DatabaseReference getContactsDbReference(){
-        return firebasedatabse.getReference().child(getCurrentUserUid()).child(CONTACTS_PATH);
+    public DatabaseReference getOneUserContactsDbReference(String uid){
+        return firebasedatabse.getReference(CONTACTS_PATH).child(uid);
     }
 
     public DatabaseReference getChatsDbReference(){
@@ -33,7 +33,11 @@ public class FirebaseHelper {
         return firebaseAuth.getCurrentUser().getUid();
     }
 
+    public String getCurrentUserEmail(){
+        return firebaseAuth.getCurrentUser().getEmail();
+    }
 
-
-
+    public FirebaseAuth getFirebaseAuth() {
+        return firebaseAuth;
+    }
 }

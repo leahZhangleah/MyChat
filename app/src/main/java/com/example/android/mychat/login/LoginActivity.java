@@ -122,14 +122,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
 
     @Override
     public void onSuccess(FirebaseUser firebaseUser) {
-        Toast.makeText(this, getString(R.string.success_login)+firebaseUser.getEmail(),
-                Toast.LENGTH_SHORT).show();
+        mPasswordView.setText("");
         if(firebaseUser!=null){
             Intent intent = new Intent(this, ContactsActivity.class);
             intent.putExtra("currentUser",firebaseUser);
             startActivity(intent);
         }
-
+        Toast.makeText(this, getString(R.string.success_login)+firebaseUser.getEmail(),
+                Toast.LENGTH_SHORT).show();
     }
 
 

@@ -1,8 +1,6 @@
 package com.example.android.mychat.newContacts;
 
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.android.mychat.User;
@@ -10,12 +8,9 @@ import com.example.android.mychat.User;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -24,48 +19,48 @@ public class NewContactViewModel extends ViewModel {
     private PublishSubject<String> publishSubject ;
     private CompositeDisposable compositeDisposable;
     private NewContactRepository newContactRepository;
-    private MutableLiveData<List<User>> userMutableLiveData;
+    //private List<User> usersList;
+    private SearchResponse response;
     public NewContactViewModel() {
         publishSubject = PublishSubject.create();
-        userMutableLiveData = new MutableLiveData<>();
+        //usersList = new ArrayList<>();
+        response = SearchResponse.loading();
         compositeDisposable = new CompositeDisposable();
         newContactRepository = new NewContactRepository();
     }
 
-    public MutableLiveData<List<User>> createPublishObservable(String search){
-        compositeDisposable.add(publishSubject.debounce(800, TimeUnit.MILLISECONDS)
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String s) throws Exception {
-                        if(s.isEmpty()|| TextUtils.equals(s,"")){
-                            return false;
-                        }
-                        return true;
-                    }
-                })
+    //observeon works downstream
+    /*
+    subscribeon only influences the thread that is used when the Observable is subscribed to and
+    it will stay on it downstream.
+     */
+    public SearchResponse createPublishObservable(String search){
+        compositeDisposable.add(publishSubject.debounce(100, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
-                .switchMap(new Function<String, ObservableSource<List<User>>>() {
+                .observeOn(Schedulers.io())
+                .map(new Function<String, List<User>>() {
                     @Override
-                    public ObservableSource<List<User>> apply(String s) throws Exception {
-                        //todo: viewmodel's search method
+                    public List<User> apply(String s) throws Exception {
                         return newContactRepository.searchNewContact(s);
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<User>>() {
                     @Override
                     public void accept(List<User> users) throws Exception {
-                        userMutableLiveData.postValue(users);
+                        //userMutableLiveData.postValue(users);
+                        //usersList.clear();
+                        //usersList.addAll(users);
+                        response = SearchResponse.success(users);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.d(TAG,"There is an error in search user" + throwable.getMessage());
+                        response = SearchResponse.error(throwable);
                     }
                 }));
         publishSubject.onNext(search);
-        return userMutableLiveData;
+        return response;
     }
 
 
