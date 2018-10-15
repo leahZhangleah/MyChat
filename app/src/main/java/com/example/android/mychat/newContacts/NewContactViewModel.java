@@ -35,7 +35,7 @@ public class NewContactViewModel extends ViewModel {
     it will stay on it downstream.
      */
     public SearchResponse createPublishObservable(String search){
-        compositeDisposable.add(publishSubject.debounce(100, TimeUnit.MILLISECONDS)
+        compositeDisposable.add(publishSubject.debounce(300, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .observeOn(Schedulers.io())
                 .map(new Function<String, List<User>>() {

@@ -37,6 +37,7 @@ public class FirebaseHelper {
         return firebaseAuth.getCurrentUser().getEmail();
     }
 
+
     public FirebaseAuth getFirebaseAuth() {
         return firebaseAuth;
     }

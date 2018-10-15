@@ -1,9 +1,12 @@
 package com.example.android.mychat.newContacts;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.android.mychat.FirebaseHelper;
 import com.example.android.mychat.User;
+import com.example.android.mychat.contacts.Contact;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -48,6 +51,32 @@ public class NewContactRepository {
                     }
                 });
         return users;
+    }
+
+
+    public void addNewContact(User user){
+        String email = user.getEmail();
+        String uid = user.getUid();
+        boolean isOnline = user.isOnline();
+        Contact contact = new Contact(email,isOnline,uid);
+        String currentUid = firebaseHelper.getCurrentUserUid();
+        String currentEmail = firebaseHelper.getCurrentUserEmail();
+        boolean currentUserOnlineStatus = true;
+        Contact currentContact = new Contact(currentEmail,currentUserOnlineStatus,currentUid);
+        firebaseHelper.getOneUserContactsDbReference(currentUid).child(uid).setValue(contact)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,"the new contact has been successfully added");
+                    }
+                });
+        firebaseHelper.getOneUserContactsDbReference(uid).child(currentUid).setValue(currentContact)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,"the new contact has been successfully added");
+                    }
+                });
     }
 
 }

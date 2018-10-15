@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import com.example.android.mychat.R;
 import com.example.android.mychat.databinding.ContactItemViewBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHolder> {
     private List<Contact> contacts;
 
-    public ContactsAdapter(List<Contact> contacts) {
-        this.contacts = contacts;
+    public ContactsAdapter() {
+        contacts = new ArrayList<>();
     }
 
     @NonNull
@@ -31,6 +32,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         ContactItemViewBinding contactItemViewBinding = holder.contactItemViewBinding;
         contactItemViewBinding.setContact(new ContactItemViewModel(contacts.get(position)));
+    }
+
+    public void switchContacts(List<Contact> newContacts){
+        if(contacts!=newContacts){
+            contacts.clear();
+            contacts.addAll(newContacts);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

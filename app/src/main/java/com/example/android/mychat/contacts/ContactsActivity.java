@@ -42,6 +42,8 @@ public class ContactsActivity extends AppCompatActivity {
         title.setText(firebaseUser.getEmail().split("@")[0]);
         contactRv = (RecyclerView) findViewById(R.id.contacts_rv);
         contactRv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        contactsAdapter = new ContactsAdapter();
+        contactRv.setAdapter(contactsAdapter);
         readDatabase();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -67,9 +69,7 @@ public class ContactsActivity extends AppCompatActivity {
         contactViewModel.getContacts().observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable List<Contact> contacts) {
-                contactsAdapter = new ContactsAdapter(contacts);
-                contactsAdapter.notifyDataSetChanged();
-                contactRv.setAdapter(contactsAdapter);
+                contactsAdapter.switchContacts(contacts);
             }
         });
     }
