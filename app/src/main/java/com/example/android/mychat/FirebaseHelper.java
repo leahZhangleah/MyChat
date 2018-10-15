@@ -1,11 +1,15 @@
 package com.example.android.mychat;
 
+import android.util.Log;
+
+import com.example.android.mychat.contacts.Contact;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseHelper {
-
+    private static final String TAG = "FirebaseHelper";
     private FirebaseDatabase firebasedatabse;
     private FirebaseAuth firebaseAuth;
     public static final String USER_PATH = "users";
@@ -37,8 +41,17 @@ public class FirebaseHelper {
         return firebaseAuth.getCurrentUser().getEmail();
     }
 
-
     public FirebaseAuth getFirebaseAuth() {
         return firebaseAuth;
+    }
+
+    public void addContactForOneUser(String userUid, String contactUid, Contact contact){
+        getOneUserContactsDbReference(userUid).child(contactUid).setValue(contact)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG,"the new contact has been successfully added");
+                    }
+                });
     }
 }

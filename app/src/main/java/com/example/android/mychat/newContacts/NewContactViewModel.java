@@ -19,11 +19,9 @@ public class NewContactViewModel extends ViewModel {
     private PublishSubject<String> publishSubject ;
     private CompositeDisposable compositeDisposable;
     private NewContactRepository newContactRepository;
-    //private List<User> usersList;
     private SearchResponse response;
     public NewContactViewModel() {
         publishSubject = PublishSubject.create();
-        //usersList = new ArrayList<>();
         response = SearchResponse.loading();
         compositeDisposable = new CompositeDisposable();
         newContactRepository = new NewContactRepository();

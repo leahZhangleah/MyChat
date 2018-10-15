@@ -40,6 +40,7 @@ public class Repository {
         contactListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                contacts.clear();
                 Log.d(TAG,dataSnapshot.getKey());
                 Log.d(TAG,dataSnapshot.getValue().toString());
                 Log.d(TAG,dataSnapshot.getRef().toString());

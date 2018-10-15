@@ -17,9 +17,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.mychat.R;
+import com.example.android.mychat.chats.ChatActivity;
+import com.example.android.mychat.chats.NewChatEvent;
 import com.example.android.mychat.login.LoginActivity;
 import com.example.android.mychat.newContacts.NewContactActivity;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -59,6 +65,18 @@ public class ContactsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void addUser(){
         Intent intent = new Intent(this,NewContactActivity.class);
         startActivity(intent);
@@ -89,6 +107,17 @@ public class ContactsActivity extends AppCompatActivity {
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewChatEvent(NewChatEvent event){
+        Intent intent = new Intent(this, ChatActivity.class);
+        Contact contact = event.getContact();
+        String email = contact.getEmail();
+        String uid = contact.getUid();
+        intent.putExtra(ChatActivity.COUNTER_CONTACT_EMAIL,email);
+        intent.putExtra(ChatActivity.COUNTER_CONTACT_UID,uid);
+        startActivity(intent);
     }
 
 

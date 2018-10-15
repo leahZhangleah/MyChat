@@ -1,15 +1,15 @@
 package com.example.android.mychat.newContacts;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.android.mychat.FirebaseHelper;
 import com.example.android.mychat.User;
 import com.example.android.mychat.contacts.Contact;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +31,10 @@ public class NewContactRepository {
     exact search: orderByChild("email").equalTo(searchTerm)
     Here is exact search: start with searchTerm
      */
-    //
     public List<User> searchNewContact(String searchTerm){
         firebaseHelper.getUserDbReference().orderByChild("email")
                 .startAt(searchTerm).endAt(searchTerm+"\uf8ff")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         users.clear();
@@ -63,20 +62,9 @@ public class NewContactRepository {
         String currentEmail = firebaseHelper.getCurrentUserEmail();
         boolean currentUserOnlineStatus = true;
         Contact currentContact = new Contact(currentEmail,currentUserOnlineStatus,currentUid);
-        firebaseHelper.getOneUserContactsDbReference(currentUid).child(uid).setValue(contact)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG,"the new contact has been successfully added");
-                    }
-                });
-        firebaseHelper.getOneUserContactsDbReference(uid).child(currentUid).setValue(currentContact)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG,"the new contact has been successfully added");
-                    }
-                });
+        firebaseHelper.addContactForOneUser(currentUid,uid,contact);
+        firebaseHelper.addContactForOneUser(uid,currentUid,currentContact);
+        EventBus.getDefault().post(new NewContactEvent());
     }
 
 }

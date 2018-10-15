@@ -11,7 +11,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/item_contact_layout">
+    android:id="@+id/item_contact_layout"
+    android:onClick="@{contact.onClick}">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/contact_image_view"

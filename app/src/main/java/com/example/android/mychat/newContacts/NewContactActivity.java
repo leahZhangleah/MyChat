@@ -18,6 +18,10 @@ import android.widget.TextView;
 
 import com.example.android.mychat.R;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 public class NewContactActivity extends AppCompatActivity {
     EditText searchTextView;
     NewContactViewModel newContactViewModel;
@@ -68,8 +72,12 @@ public class NewContactActivity extends AppCompatActivity {
             }
         });
 
-        
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     private void search(String searchTerm){
@@ -94,4 +102,14 @@ public class NewContactActivity extends AppCompatActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewContactEvent(NewContactEvent event){
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 }
