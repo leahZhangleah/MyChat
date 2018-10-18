@@ -35,14 +35,17 @@ public class ContactsActivity extends AppCompatActivity {
     private RecyclerView contactRv;
     private ContactsAdapter contactsAdapter;
     private ContactViewModel contactViewModel;
+    private FirebaseUser firebaseUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //todo: deal with phone configuration change
         Intent intent = getIntent();
-        FirebaseUser firebaseUser = intent.getParcelableExtra("currentUser");
+        firebaseUser = intent.getParcelableExtra("currentUser");
+
         ImageView titleImage = (ImageView) toolbar.findViewById(R.id.toolbar_image);
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(firebaseUser.getEmail().split("@")[0]);
@@ -56,10 +59,6 @@ public class ContactsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //contactViewModel.addNewContact("c@gmail.com","asdbdm");
-                //contactViewModel.addNewContact("d@gmail.com","weitnd");
-                //contactViewModel.writeToDatabase("c@gmail.com","Do you wanna hang ou?","07/28",null);
-                //contactViewModel.writeToDatabase("d@gmail.com","Sure,what's your plan?","07/28",null);
                 addUser();
             }
         });
@@ -113,10 +112,14 @@ public class ContactsActivity extends AppCompatActivity {
     public void onNewChatEvent(NewChatEvent event){
         Intent intent = new Intent(this, ChatActivity.class);
         Contact contact = event.getContact();
-        String email = contact.getEmail();
-        String uid = contact.getUid();
-        intent.putExtra(ChatActivity.COUNTER_CONTACT_EMAIL,email);
-        intent.putExtra(ChatActivity.COUNTER_CONTACT_UID,uid);
+        String contactEmail = contact.getEmail();
+        String contactUid = contact.getUid();
+        intent.putExtra(ChatActivity.COUNTER_CONTACT_EMAIL,contactEmail);
+        intent.putExtra(ChatActivity.COUNTER_CONTACT_UID,contactUid);
+        String userEmail = firebaseUser.getEmail();
+        String userUid = firebaseUser.getUid();
+        intent.putExtra(ChatActivity.USER_EMAIL,userEmail);
+        intent.putExtra(ChatActivity.USER_UID,userUid);
         startActivity(intent);
     }
 

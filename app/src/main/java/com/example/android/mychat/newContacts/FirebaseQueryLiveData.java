@@ -3,13 +3,14 @@ package com.example.android.mychat.newContacts;
 import android.arch.lifecycle.LiveData;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
@@ -17,7 +18,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     private Query query;
     private boolean removeListenerPending = false;
     private Handler handler = new Handler();
-    private MyValueEventListener myValueEventListener = new MyValueEventListener();
+    private MyChildEventListener myValueEventListener = new MyChildEventListener();
     private Runnable removeEventListener = new Runnable() {
         @Override
         public void run() {
@@ -40,7 +41,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
         if(removeListenerPending){
             handler.removeCallbacks(removeEventListener);
         }else{
-            query.addValueEventListener(myValueEventListener);
+            query.addChildEventListener(myValueEventListener);
         }
         removeListenerPending = false;
     }
@@ -53,10 +54,26 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
         removeListenerPending = true;
     }
 
-    private class MyValueEventListener implements ValueEventListener{
+    private class MyChildEventListener implements ChildEventListener{
+
         @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             setValue(dataSnapshot);
+        }
+
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
         }
 
         @Override
@@ -64,4 +81,5 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
             Log.d(TAG,"Can't listen to query. "+query + databaseError.toException());
         }
     }
+
 }

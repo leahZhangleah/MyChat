@@ -6,4 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".chats.ChatActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/chat_edit_text_view">
+    </android.support.v7.widget.RecyclerView>
+
+    <EditText
+        android:id="@+id/chat_edit_text_view"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/search_tv_height"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:background="@drawable/search_bg"
+        android:imeActionId="6"
+        android:imeActionLabel="Send"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:paddingLeft="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

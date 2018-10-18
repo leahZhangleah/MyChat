@@ -29,8 +29,8 @@ public class FirebaseHelper {
         return firebasedatabse.getReference(CONTACTS_PATH).child(uid);
     }
 
-    public DatabaseReference getChatsDbReference(){
-        return firebasedatabse.getReference().child(getCurrentUserUid()).child(CHATS_PATH);
+    public DatabaseReference getChatsDbReference(String uniqueKey){
+        return firebasedatabse.getReference(CHATS_PATH).child(uniqueKey);
     }
 
     public String getCurrentUserUid(){

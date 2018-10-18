@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:id="@+id/chat_layout">
+
+    <TextView
+        android:id="@+id/chat_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sunday 17:35" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chat_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:padding="2dp"
+        android:src="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chat_timestamp" />
+
+    <TextView
+        tools:text="Y"
+        android:gravity="center"
+        android:id="@+id/chat_title_brev"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/chat_image"
+        app:layout_constraintEnd_toEndOf="@+id/chat_image"
+        app:layout_constraintStart_toStartOf="@+id/chat_image"
+        app:layout_constraintTop_toTopOf="@+id/chat_image" />
+
+    <TextView
+        android:id="@+id/chat_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/chat_image"
+        app:layout_constraintStart_toEndOf="@+id/chat_image"
+        app:layout_constraintTop_toTopOf="@+id/chat_image"
+        tools:text="what are you doing?" />
+</android.support.constraint.ConstraintLayout>
