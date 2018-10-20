@@ -1,36 +1,52 @@
 package com.example.android.mychat.chats;
 
+import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.mychat.FirebaseHelper;
-import com.example.android.mychat.newContacts.FirebaseQueryLiveData;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.database.ValueEventListener;
 
 public class ChatRepository {
     private static final String TAG = "ChatRepository";
-    FirebaseHelper firebaseHelper;
-    List<Message> messages;
-    Message newMsg;
-    private static final int MESSAGE_COUNT = 10;
+    private FirebaseHelper firebaseHelper;
+    private MutableLiveData<DataSnapshot> snapshotMutableLiveData;
+    private static final int MESSAGE_COUNT = 11;
 
     public ChatRepository() {
         firebaseHelper = new FirebaseHelper();
-        messages = new ArrayList<>();
-        //newMsg = new Message();
+        snapshotMutableLiveData = new MutableLiveData<>();
     }
     //.limitToFirst(MESSAGE_COUNT)
     //                .startAt(currentPage * MESSAGE_COUNT + 1);
 
-    public FirebaseQueryLiveData fetchMessages(String uniqueKey,int currentPage){
+    public MutableLiveData<DataSnapshot> fetchMoreMessages(String uniqueKey,String lastVisibleKey){
         Query query = firebaseHelper.getChatsDbReference(uniqueKey)
                 .limitToLast(MESSAGE_COUNT)
-                .orderByChild("timestamp")
-                .startAt(currentPage * MESSAGE_COUNT + 1);
+                .orderByKey()
+                .endAt(lastVisibleKey);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               snapshotMutableLiveData.postValue(dataSnapshot);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return snapshotMutableLiveData;
+    }
+    public FirebaseQueryLiveData fetchMessages(String uniqueKey,int currentPage){
+        int page = currentPage * MESSAGE_COUNT + 1;
+        Query query = firebaseHelper.getChatsDbReference(uniqueKey)
+                .limitToLast(MESSAGE_COUNT)
+                .orderByKey();
         Log.d(TAG,query.toString());
         Log.d(TAG,query.getRef().toString());
         return new FirebaseQueryLiveData(query);

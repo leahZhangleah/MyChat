@@ -73,9 +73,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     //todo: switch messages list
     //todo:layout direction
 
-    public void fetchMoreMessages(Message newMsg){
+    public void fetchMessages(Message newMsg){
         messages.add(newMsg);
         notifyDataSetChanged();
+    }
+
+    public void fetchMoreMessages(int pos,Message newMsg){
+        if(!alreadyInAdapter(newMsg)){
+            messages.add(pos,newMsg);
+            notifyDataSetChanged();
+        }
+    }
+
+    private boolean alreadyInAdapter(Message newMsg){
+        boolean alreadyInAdapter = false;
+        for(Message msg: messages){
+            if(msg.timestamp==newMsg.timestamp&&msg.senderUid==newMsg.senderUid&&msg.msg==newMsg.msg){
+                alreadyInAdapter = true;
+                break;
+            }
+        }
+        return alreadyInAdapter;
     }
 
     @Override
