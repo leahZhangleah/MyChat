@@ -80,6 +80,9 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    //todo: 1.scroll recyclerview to the right position when first load and fetch more msgs
+    //todo: 2.adjust layout when soft keyboard appears
+
     private void fetchMessages(String userUid, String contactUid, int currentPage){
         chatViewModel = ViewModelProviders.of(this).get(ChatViewModel.class);
         chatViewModel.fetchMessages(userUid, contactUid, currentPage)

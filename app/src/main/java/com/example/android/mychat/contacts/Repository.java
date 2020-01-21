@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.mychat.FirebaseHelper;
-import com.example.android.mychat.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,9 +75,7 @@ public class Repository {
 
     public void signOut(){
         String uid = firebaseHelper.getCurrentUserUid();
-        String email = firebaseHelper.getCurrentUserEmail();
-        User user = new User(email,false,uid);
-        firebaseHelper.getUserDbReference().child(uid).setValue(user);
+        firebaseHelper.getUserDbReference().child(uid).child("online").setValue(false);
         firebaseHelper.getFirebaseAuth().signOut();
     }
 }

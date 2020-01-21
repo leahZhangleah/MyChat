@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.android.mychat.R;
 import com.example.android.mychat.contacts.ContactsActivity;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity implements LoginView{
 
@@ -76,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
                 }
             }
         });
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
     }
 
     private boolean isNetworkAvailable(){

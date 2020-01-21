@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".newContacts.NewContactActivity">
 
+    <!--todo: think about autocomplete with adapter to provide suggestions-->
     <EditText
         android:singleLine="true"
         android:maxLines="1"

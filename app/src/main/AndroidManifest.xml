@@ -22,13 +22,32 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".login.LoginActivity2"
             android:label="@string/title_activity_login2" />
-        <activity android:name=".contacts.ContactsActivity" />
-        <activity android:name=".newContacts.NewContactActivity" />
-        <activity android:name=".chats.ChatActivity"></activity>
+
+        <activity android:name=".contacts.ContactsActivity">
+            <intent-filter>
+                <action android:name="CONTACTACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".newContacts.NewContactActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name=".chats.ChatActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <service android:name=".chats.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

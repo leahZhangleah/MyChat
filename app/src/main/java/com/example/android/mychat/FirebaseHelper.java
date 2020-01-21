@@ -15,6 +15,7 @@ public class FirebaseHelper {
     public static final String USER_PATH = "users";
     public static final String CONTACTS_PATH = "contacts";
     public static final String CHATS_PATH = "chats";
+    public static final String CHAT_ROOMS_PATH = "chatrooms";
 
     public FirebaseHelper() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -31,6 +32,10 @@ public class FirebaseHelper {
 
     public DatabaseReference getChatsDbReference(String uniqueKey){
         return firebasedatabse.getReference(CHATS_PATH).child(uniqueKey);
+    }
+
+    public DatabaseReference getChatroomDbReference(String uniqueKey){
+        return firebasedatabse.getReference(CHAT_ROOMS_PATH).child(uniqueKey);
     }
 
     public String getCurrentUserUid(){

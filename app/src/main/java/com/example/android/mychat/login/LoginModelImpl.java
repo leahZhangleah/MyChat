@@ -12,11 +12,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 public class LoginModelImpl implements LoginModel {
     FirebaseAuth firebaseAuth;
     FirebaseHelper firebaseHelper;
     private static final String TAG = "LoginModelImpl";
+    private String currentTokenId;
 
     public LoginModelImpl() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -36,6 +38,8 @@ public class LoginModelImpl implements LoginModel {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         Log.d("LoginModelImpl","sign in user with email:success");
+                        String currentUserUid = authResult.getUser().getUid();
+                        updateTokenId(currentUserUid);
                         listener.onAuthenticationSuccess(authResult.getUser());
                     }
                 })
@@ -84,6 +88,7 @@ public class LoginModelImpl implements LoginModel {
                                 });
                         Contact contact = new Contact(email,true,currentUserUid);
                         firebaseHelper.getOneUserContactsDbReference(firebaseHelper.getCurrentUserUid()).push().setValue(contact);
+                        updateTokenId(currentUserUid);
                         listener.onAuthenticationSuccess(authResult.getUser());
                     }
                 })
@@ -103,69 +108,19 @@ public class LoginModelImpl implements LoginModel {
                 });
     }
 
-
-    /*
-    private class SignUpTask extends AsyncTask<Void,Void,Void>{
-        String email,password;
-        onAuthenticationFinishedListener listener;
-
-        public SignUpTask(String email, String password,onAuthenticationFinishedListener listener) {
-            this.email = email;
-            this.password = password;
-            this.listener = listener;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            firebaseAuth.createUserWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Log.d("LoginModelImpl","sign up user with email:success");
-                                listener.onAuthenticationSuccess(firebaseAuth.getCurrentUser());
-                            }else{
-                                Log.d("LoginModelImpl","sign in user with email:failure",task.getException());
-                                listener.onAuthenticationFailed("Can't create a new account");
-                            }
-                        }
-                    });
-            return null;
-        }
+    private void updateTokenId(final String currentUserUid){
+        FirebaseUser currentUser = checkCurrentUser();
+        currentUser.getIdToken(true)
+                .addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                    @Override
+                    public void onSuccess(GetTokenResult getTokenResult) {
+                        currentTokenId = getTokenResult.getToken();
+                        firebaseHelper.getUserDbReference().child(currentUserUid)
+                                .child("device_token").setValue(currentTokenId);
+                    }
+                });
     }
 
-    private class SignInTask extends AsyncTask<Void,Void,Void>{
-        String email,password;
-        onAuthenticationFinishedListener listener;
-
-        public SignInTask(String email, String password,onAuthenticationFinishedListener listener) {
-            this.email = email;
-            this.password = password;
-            this.listener = listener;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if( firebaseAuth.fetchSignInMethodsForEmail(email).isSuccessful()){
-                Log.d("LoginModelImpl","the email exists");
-                firebaseAuth.signInWithEmailAndPassword(email,password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Log.d("LoginModelImpl","sign in user with email:success");
-                                    listener.onAuthenticationSuccess(firebaseAuth.getCurrentUser());
-                                }else{
-                                    Log.d("LoginModelImpl","sign in user with email:failure",task.getException());
-                                    listener.onAuthenticationFailed("Wrong password");
-                                }
-                            }
-                        });
-            }else{
-                new SignUpTask(email,password,listener).execute();
-            }
-            return null;
-        }
-    }*/
 }
 
 

@@ -54,6 +54,7 @@ public class NewContactRepository {
 
 
     public void addNewContact(User user){
+        //add new contact for current user
         String email = user.getEmail();
         String uid = user.getUid();
         boolean isOnline = user.isOnline();
@@ -64,7 +65,22 @@ public class NewContactRepository {
         Contact currentContact = new Contact(currentEmail,currentUserOnlineStatus,currentUid);
         firebaseHelper.addContactForOneUser(currentUid,uid,contact);
         firebaseHelper.addContactForOneUser(uid,currentUid,currentContact);
+
+        //add chat database for current user and contact
+       saveUsersInChatroomDb(currentUid,uid);
+
         EventBus.getDefault().post(new NewContactEvent());
+    }
+
+    private void saveUsersInChatroomDb(String userUid, String contactUid){
+        String uniqueKey;
+        if(userUid.compareTo(contactUid) < 0){
+            uniqueKey =  userUid + contactUid;
+        }else{
+            uniqueKey = contactUid + userUid;
+        }
+        firebaseHelper.getChatroomDbReference(uniqueKey).child(userUid).setValue(true);
+        firebaseHelper.getChatroomDbReference(uniqueKey).child(contactUid).setValue(true);
     }
 
 }
